@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post a ride · RideBuddy</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%97%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <main class="container">
+    <h1 class="page-title">Post a ride</h1>
+    <div class="grid-2">
+      <form id="form" class="card" novalidate>
+        <div class="field"><label for="origin">Starting point</label><input id="origin" type="text" placeholder="Search an address or click the map" maxlength="150"></div>
+        <div class="field"><label for="dest">Destination</label><input id="dest" type="text" placeholder="Search an address or click the map" maxlength="150"></div>
+        <div class="pick-bar">
+          <button type="button" class="btn secondary sm active" id="pick-origin">📍 Click map: start</button>
+          <button type="button" class="btn secondary sm" id="pick-dest">📍 Click map: destination</button>
+        </div>
+        <div class="row">
+          <div class="field"><label for="date">Date</label><input id="date" type="date" required></div>
+          <div class="field"><label for="time">Departure time</label><input id="time" type="time" required></div>
+        </div>
+        <div class="field">
+          <label>Repeats on (optional)</label>
+          <div class="checks">
+            <label><input type="checkbox" name="days" value="Mon"> Mon</label>
+            <label><input type="checkbox" name="days" value="Tue"> Tue</label>
+            <label><input type="checkbox" name="days" value="Wed"> Wed</label>
+            <label><input type="checkbox" name="days" value="Thu"> Thu</label>
+            <label><input type="checkbox" name="days" value="Fri"> Fri</label>
+            <label><input type="checkbox" name="days" value="Sat"> Sat</label>
+            <label><input type="checkbox" name="days" value="Sun"> Sun</label>
+          </div>
+          <div class="hint">For regular commutes. The date above is the first day.</div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="seats">Available seats</label><input id="seats" type="number" min="1" max="10" value="3" required></div>
+          <div class="field"><label for="cost">Cost per seat (₹)</label><input id="cost" type="number" min="0" step="1" value="40" required></div>
+        </div>
+        <div class="field"><label for="notes">Notes (optional)</label><textarea id="notes" maxlength="500" placeholder="Car model, pickup spot, rules…"></textarea></div>
+        <button class="btn block" type="submit" id="submit-btn">Post ride</button>
+      </form>
+      <div class="map-sticky">
+        <div id="map" class="map tall" role="application" aria-label="Map to choose start and destination"></div>
+        <p class="hint">Search an address, or choose “Click map” and then click the map.</p>
+      </div>
+    </div>
+  </main>
+  <p class="footer">RideBuddy · a web programming class project · Map data © OpenStreetMap contributors</p>
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/post-ride.js"></script>
+</body>
+</html>

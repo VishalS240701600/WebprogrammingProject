@@ -1,0 +1,21 @@
+{
+  "name": "ridebuddy",
+  "version": "1.0.0",
+  "description": "RideBuddy - a carpool finder for college/office commutes",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "seed": "node db/seed.js",
+    "test": "node --test test/api.test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "express-session": "^1.19.0",
+    "leaflet": "^1.9.4"
+  }
+}

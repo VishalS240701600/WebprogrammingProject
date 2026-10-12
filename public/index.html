@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find a ride · RideBuddy</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%97%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Share the ride. Split the cost.</h1>
+      <p>Find a carpool for your college or office commute in Chennai.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <form id="search-form" class="card hero-card" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="from">Pickup</label>
+          <input id="from" type="text" placeholder="e.g. Tambaram Railway Station" maxlength="150">
+        </div>
+        <div class="field">
+          <label for="to">Drop-off</label>
+          <input id="to" type="text" placeholder="e.g. Anna University" maxlength="150">
+        </div>
+      </div>
+      <div class="pick-bar">
+        <button type="button" class="btn secondary sm" id="pick-from">📍 Pick pickup on map</button>
+        <button type="button" class="btn secondary sm" id="pick-to">📍 Pick drop-off on map</button>
+      </div>
+      <div class="row">
+        <div class="field"><label for="date">Date</label><input id="date" type="date"></div>
+        <div class="field"><label for="time">Preferred time</label><input id="time" type="time"></div>
+        <div class="field">
+          <label for="window">Time window</label>
+          <select id="window">
+            <option value="30">± 30 minutes</option>
+            <option value="60" selected>± 1 hour</option>
+            <option value="120">± 2 hours</option>
+            <option value="240">± 4 hours</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" type="submit" id="search-btn">Search rides</button>
+        <button class="btn secondary" type="button" id="reset-btn">Reset</button>
+      </div>
+    </form>
+
+    <div class="search-layout">
+      <section aria-live="polite">
+        <div class="between"><h2 id="results-title">Upcoming rides</h2><span class="muted small" id="results-count"></span></div>
+        <div id="results"></div>
+      </section>
+      <div class="map-sticky">
+        <div id="map" class="map tall" role="application" aria-label="Map of ride search results"></div>
+        <p class="hint">Green A = your pickup · Red B = your drop-off · Teal numbers = ride starting points.</p>
+      </div>
+    </div>
+  </main>
+
+  <p class="footer">RideBuddy · a web programming class project · Map data © OpenStreetMap contributors</p>
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
