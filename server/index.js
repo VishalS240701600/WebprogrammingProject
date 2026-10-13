@@ -72,4 +72,5 @@ app.use(express.static(path.join(__dirname, '..', 'docs')));
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`RideBuddy running at http://localhost:${PORT}`));
+// 0.0.0.0 = accept connections from outside the container (Render needs this)
+app.listen(PORT, '0.0.0.0', () => console.log(`RideBuddy running on port ${PORT}`));

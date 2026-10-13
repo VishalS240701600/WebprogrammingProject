@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "RideBuddy - a carpool finder for college/office commutes",
   "main": "server/index.js",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node server/index.js",
-    "dev": "node --watch server/index.js",
+    "dev": "node --watch --env-file-if-exists=.env server/index.js",
     "seed": "node db/seed.js",
     "test": "node --test test/api.test.js"
   },

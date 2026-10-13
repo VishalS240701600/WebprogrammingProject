@@ -1,14 +1,17 @@
 // Shared helpers loaded on every page: talking to the API, messages, the navbar, formatting.
 
 // ---------- Talking to the server ----------
-// API_BASE comes from js/config.js ('' = same server, or the URL of the hosted backend).
+// API_BASE comes from js/config.js ('' = no server: data lives in the browser, see local-api.js).
 const API_BASE = (window.RIDEBUDDY_API_BASE || '').replace(/\/$/, '');
 
 // api('/rides/5')                          -> GET
 // api('/rides', { method: 'POST', body })  -> POST with a JSON body
 // Throws an Error whose message is the server's friendly error text.
 async function api(path, { method = 'GET', body } = {}) {
-  // 'include' lets the session cookie travel to a backend hosted on another domain
+  // No backend configured: the browser-side backend in local-api.js answers instead.
+  if (!API_BASE) return localApi(method, path, body);
+
+  // Otherwise talk to a real server. 'include' lets the session cookie travel to another domain.
   const options = { method, headers: {}, credentials: 'include' };
   if (body !== undefined) {
     options.headers['Content-Type'] = 'application/json';

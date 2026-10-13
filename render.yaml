@@ -1,0 +1,22 @@
+# Render Blueprint: Dashboard > New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: ridebuddy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/auth/me
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true # Render creates a random value
+      - key: NOMINATIM_USER_AGENT
+        sync: false # you type this in the dashboard, e.g. RideBuddy/1.0 (you@example.com)
+      - key: NOMINATIM_COUNTRY
+        value: in
+      - key: FRONTEND_ORIGIN
+        sync: false # only when the front end is on GitHub Pages, e.g. https://yourname.github.io

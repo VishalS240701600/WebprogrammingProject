@@ -1,4 +1,4 @@
-// Where the backend API lives. Loaded before api.js on every page.
-//   ''                                   -> same server as the page (local dev: npm start)
-//   'https://your-backend.example.com'   -> backend hosted elsewhere (GitHub Pages only serves static files)
+// Where the API lives. Loaded before api.js on every page.
+//   ''                                   -> no server: the app runs entirely in the browser (GitHub Pages), see local-api.js
+//   'https://your-backend.example.com'   -> use the Express server in server/ hosted at that URL instead
 window.RIDEBUDDY_API_BASE = '';

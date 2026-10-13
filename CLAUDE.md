@@ -18,7 +18,8 @@ There is no linter or build step. `npm test` uses an explicit file path because 
 
 Demo logins: `arjun@ridebuddy.test` / `password123`, admin `admin@ridebuddy.test` / `admin1234`.
 
-Env vars: `PORT`, `DB_PATH`, `SESSION_SECRET` (required when `NODE_ENV=production`), `NOMINATIM_USER_AGENT`, `NOMINATIM_COUNTRY` (default `in`).
+Env vars (template in `.env.example`; `npm run dev` loads `.env`): `PORT`, `DB_PATH`, `SESSION_SECRET` (required when `NODE_ENV=production`), `NOMINATIM_USER_AGENT`, `NOMINATIM_COUNTRY` (default `in`), `FRONTEND_ORIGIN` (only for a separately hosted front end).
+`render.yaml` is the Render blueprint (single service serving both API and `docs/`).
 
 ## Architecture
 
@@ -40,9 +41,11 @@ Env vars: `PORT`, `DB_PATH`, `SESSION_SECRET` (required when `NODE_ENV=productio
 - Tests insert past-dated rides directly into the temp DB, because the API refuses to create rides in the past.
 - In the Bash tool, long heredocs containing quotes tended to fail on this machine; the Write tool is more reliable for creating files.
 
-## Deployment (GitHub Pages + separate backend)
+## Deployment (GitHub Pages, front end only)
 
-- `docs/` is the GitHub Pages site (Settings > Pages > Deploy from branch > `main` / `/docs`). Pages is static only, so the Express API must run on another host (e.g. Render).
-- Set `window.RIDEBUDDY_API_BASE` in `docs/js/config.js` to the backend URL (empty = same server, for local dev). Set `FRONTEND_ORIGIN` (e.g. `https://user.github.io`) on the backend: it enables CORS with credentials and switches the cookie to `SameSite=None; Secure`.
+- `docs/` is the GitHub Pages site (Settings > Pages > Deploy from branch > `main` / `/docs`). Pages is static only, so by default there is **no server**: `docs/js/local-api.js` is a browser-side copy of the Express API (same URLs, validation, seat accounting, privacy and matching) that stores everything in `localStorage` and seeds the Chennai demo data on first visit. `api()` in `api.js` calls it when `window.RIDEBUDDY_API_BASE` (in `docs/js/config.js`) is empty.
+- Data is per browser: visitors do not see each other's rides, and clearing site data resets to the demo data (`resetDemoData()` in the console does the same). Password hashes are PBKDF2 but live in the visitor's own storage, so this is demo-grade security.
+- If you change an API rule in `server/routes/*`, mirror it in `local-api.js` (and vice versa). `server/` and `npm test` still cover the Express version, which you can use by setting `RIDEBUDDY_API_BASE` to a hosted server (then also set `FRONTEND_ORIGIN` on it; see `render.yaml`).
+- Geocoding in browser mode calls Nominatim directly (queued >= 1.1 s apart, cached); a browser cannot set a User-Agent, so it sends its normal Referer instead.
 - The site lives under `/<repo>/`, so frontend links and asset paths must stay **relative** (no leading `/`). The login `next` param is a bare page name like `ride.html?id=5` (see `currentPage()` / `safeNext()` in `api.js`).
-- Cross-site session cookies are blocked by some browsers (Safari, Chrome incognito), so login can fail there when the backend is on a different domain.
+- Local preview without Node: `python -m http.server` inside `docs/`.
