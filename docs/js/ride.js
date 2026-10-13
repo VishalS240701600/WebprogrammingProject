@@ -101,7 +101,7 @@
     if (!user) {
       panel.innerHTML = `
         <h2>Request a seat</h2>
-        <a class="btn block" href="login.html?next=${encodeURIComponent(location.pathname + location.search)}">Log in to request</a>
+        <a class="btn block" href="login.html?next=${encodeURIComponent(currentPage())}">Log in to request</a>
         <p class="hint">New? <a href="register.html">Create an account</a>.</p>`;
       return;
     }

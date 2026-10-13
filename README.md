@@ -67,7 +67,7 @@ Rides further than 10 km from either point, or outside the time window, are drop
 
 - All input is validated server-side (`server/utils/validate.js`); every SQL statement is parameterized.
 - Passwords hashed with bcrypt; sessions in an `httpOnly`, `sameSite=lax` cookie; session id regenerated on login; login/register rate-limited.
-- User text is HTML-escaped before display (`esc()` in `public/js/api.js`).
+- User text is HTML-escaped before display (`esc()` in `docs/js/api.js`).
 - Phone numbers are shown only to the account owner, or between driver and accepted rider.
 - Nominatim is called **through the server** (`/api/geocode`): it sets a User-Agent, spaces calls ≥ 1.1 s apart, caches results, and rate-limits each visitor; the browser also debounces typing (700 ms).
 - Sessions are kept in memory, so they reset when the server restarts (fine for a class project).
@@ -86,7 +86,7 @@ Rides further than 10 km from either point, or outside the time window, are drop
 │   ├── middleware/         auth.js (requireLogin/Admin), errors.js
 │   ├── routes/             auth, users, rides, requests, ratings, admin, geocode
 │   └── utils/              validate.js, geo.js (haversine), matching.js
-├── public/
+├── docs/
 │   ├── *.html              index, login, register, post-ride, ride, dashboard, profile, admin
 │   ├── css/style.css
 │   └── js/                 api.js (shared helpers + navbar), map.js (Leaflet helpers),

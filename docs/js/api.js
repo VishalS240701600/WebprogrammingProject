@@ -1,18 +1,22 @@
 // Shared helpers loaded on every page: talking to the API, messages, the navbar, formatting.
 
 // ---------- Talking to the server ----------
+// API_BASE comes from js/config.js ('' = same server, or the URL of the hosted backend).
+const API_BASE = (window.RIDEBUDDY_API_BASE || '').replace(/\/$/, '');
+
 // api('/rides/5')                          -> GET
 // api('/rides', { method: 'POST', body })  -> POST with a JSON body
 // Throws an Error whose message is the server's friendly error text.
 async function api(path, { method = 'GET', body } = {}) {
-  const options = { method, headers: {}, credentials: 'same-origin' };
+  // 'include' lets the session cookie travel to a backend hosted on another domain
+  const options = { method, headers: {}, credentials: 'include' };
   if (body !== undefined) {
     options.headers['Content-Type'] = 'application/json';
     options.body = JSON.stringify(body);
   }
   let res;
   try {
-    res = await fetch('/api' + path, options);
+    res = await fetch(API_BASE + '/api' + path, options);
   } catch (e) {
     throw new Error('Cannot reach the server. Check your connection and try again.');
   }
@@ -113,7 +117,7 @@ async function initPage({ login = false, admin = false } = {}) {
     currentUser = null;
   }
   if ((login || admin) && !currentUser) {
-    location.href = '/login.html?next=' + encodeURIComponent(location.pathname + location.search);
+    location.href = 'login.html?next=' + encodeURIComponent(currentPage());
     return new Promise(() => {}); // stop the page script while redirecting
   }
   if (admin && !currentUser.is_admin) {
@@ -161,8 +165,14 @@ function renderNav() {
   }
 }
 
+// The current page as a relative link, e.g. "ride.html?id=5". Relative links keep working
+// when the site lives under a sub-path like https://user.github.io/ridebuddy/
+function currentPage() {
+  return (location.pathname.split('/').pop() || 'index.html') + location.search;
+}
+
 // Only allow same-site relative redirects after login (prevents open-redirect tricks)
 function safeNext() {
   const next = new URLSearchParams(location.search).get('next');
-  return next && next.startsWith('/') && !next.startsWith('//') ? next : '/dashboard.html';
+  return next && /^[\w-]+\.html(\?[\w=&%.-]*)?$/.test(next) ? next : 'dashboard.html';
 }

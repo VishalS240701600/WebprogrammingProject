@@ -11,9 +11,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 
+// When the front-end is on GitHub Pages (a different domain), set FRONTEND_ORIGIN to its origin,
+// e.g. https://yourname.github.io  (no path, no trailing slash). Leave unset for local dev.
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
+const crossSite = Boolean(FRONTEND_ORIGIN);
+if (isProd) app.set('trust proxy', 1); // hosts like Render sit behind a proxy; needed for secure cookies
+
 if (isProd && !process.env.SESSION_SECRET) {
   console.error('Set SESSION_SECRET before running in production.');
   process.exit(1);
+}
+
+// ---- CORS (only needed when the front-end is hosted on another origin) ----
+// Credentials are allowed so the session cookie works, so the origin must be one exact value, never '*'.
+if (crossSite) {
+  app.use((req, res, next) => {
+    res.set('Access-Control-Allow-Origin', FRONTEND_ORIGIN);
+    res.set('Access-Control-Allow-Credentials', 'true');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.append('Vary', 'Origin');
+    if (req.method === 'OPTIONS') return res.sendStatus(204); // answer the browser's preflight check
+    next();
+  });
 }
 
 // ---- Basic middleware ----
@@ -32,7 +52,7 @@ app.use(
     secret: process.env.SESSION_SECRET || 'dev-only-secret-change-me',
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: true, sameSite: 'lax', secure: isProd, maxAge: 7 * 24 * 60 * 60 * 1000 },
+    cookie: { httpOnly: true, sameSite: crossSite ? 'none' : 'lax', secure: isProd || crossSite, maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -47,8 +67,8 @@ app.use('/api', require('./routes/ratings')); // /ratings, /rides/:id/ratable
 app.use('/api', notFound); // unknown API path -> JSON 404
 
 // ---- Static front-end ----
-app.use('/vendor/leaflet', express.static(path.join(__dirname, '..', 'node_modules', 'leaflet', 'dist')));
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// The same docs/ folder is what GitHub Pages publishes; Express also serves it for local development.
+app.use(express.static(path.join(__dirname, '..', 'docs')));
 
 app.use(errorHandler);
 

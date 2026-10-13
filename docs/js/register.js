@@ -1,7 +1,7 @@
 // Register page
 (async () => {
   const user = await initPage();
-  if (user) return (location.href = '/dashboard.html');
+  if (user) return (location.href = 'dashboard.html');
 
   const form = document.getElementById('form');
   form.addEventListener('submit', async (e) => {
@@ -22,7 +22,7 @@
           organization: form.organization.value,
         },
       });
-      location.href = '/dashboard.html';
+      location.href = 'dashboard.html';
     } catch (err) {
       showError(form, err.message);
       button.disabled = false;

@@ -5,7 +5,7 @@
   const idParam = new URLSearchParams(location.search).get('id');
 
   // No id in the URL -> show my own profile (login required)
-  if (!idParam && !me) return (location.href = '/login.html?next=/profile.html');
+  if (!idParam && !me) return (location.href = 'login.html?next=profile.html');
   const userId = idParam ? Number(idParam) : me.id;
   const isMine = !!me && userId === me.id;
 
