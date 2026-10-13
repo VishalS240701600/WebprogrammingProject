@@ -4,3 +4,4 @@ db/*.db-shm
 db/*.db-wal
 .env
 *.log
+CLAUDE.md
